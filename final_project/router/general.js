@@ -41,9 +41,8 @@ public_users.get('/isbn/:isbn', function (req, res) {
 public_users.get('/author/:author', function (req, res) {
   const author = req.params.author;
   let booksByAuthors = [];
-  console.log(author);
   for (let id in books) {
-    if (books[id].author == author) {
+    if (books[id].author === author) {
       booksByAuthors.push(books[id]);
     }
   }
@@ -72,10 +71,20 @@ public_users.get('/title/:title', function (req, res) {
   return res.status(200).json({ 'books': booksByTitles });
 });
 
-//  Get book review
+
+/**
+ * Get book review
+ * @param {string} isbn - isbn of a book
+ * @return {Object | String} - book review returned based of isbn if it match, otherwise a 'Book not found' message
+ */
 public_users.get('/review/:isbn', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const isbn = req.params.isbn;
+  const book = books[isbn];
+  if (book) {
+    return res.status(200).json({ 'reviews': book.reviews });
+  } else {
+    return res.status(400).json({ message: `Review not found based on isbn ${isbn}` });
+  }
 });
 
 module.exports.general = public_users;
